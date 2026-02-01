@@ -67,6 +67,17 @@ jobs:
         rustup default nightly
         rustup target add x86_64-apple-darwin
         rustup target add aarch64-apple-darwin
+    - name: Install Linux Dependencies
+      if: runner.os == 'Linux'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential pkg-config cmake git \
+          libasound2-dev libpulse-dev libudev-dev \
+          libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxss-dev \
+          libwayland-dev libxkbcommon-dev libegl-dev libdrm-dev libgbm-dev \
+          libvulkan-dev
+        rustup toolchain install nightly
+        rustup default nightly
     - name: Set up MSVC environment
       if: matrix.platform.msvc-arch != ''
       uses: ilammy/msvc-dev-cmd@v1
