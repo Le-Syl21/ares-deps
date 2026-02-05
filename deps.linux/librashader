@@ -38,7 +38,6 @@ librashader_patch() {
   echo "Pinning nightly Rust version to 2025-03-21"
   echo '[toolchain]' > rust-toolchain.toml
   echo 'channel = "nightly-2025-03-21"' >> rust-toolchain.toml
-  echo 'targets = [ "x86_64-unknown-linux-gnu" ]' >> rust-toolchain.toml
   cd ..
   echo "[librashader] patching source -- success"
 }

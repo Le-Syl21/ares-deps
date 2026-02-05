@@ -1,8 +1,6 @@
 name: Build
 on:
   push:
-  schedule:
-    - cron: 20 0 * * *
   workflow_dispatch:
 jobs:
   build:
@@ -30,8 +28,12 @@ jobs:
           os: macos-latest
           compiler: clang++
           shell: sh
-        - name: linux-universal
+        - name: linux-x64
           os: ubuntu-latest
+          compiler: clang++
+          shell: sh
+        - name: linux-arm64
+          os: ubuntu-24.04-arm
           compiler: clang++
           shell: sh
     name: ${{ matrix.program }}-${{ matrix.platform.name }}
@@ -128,7 +130,7 @@ jobs:
         run: |
           : Decompress build artifacts
           ls **/*
-          for package in macos-universal linux-universal windows-x64 windows-arm64; do
+          for package in macos-universal linux-x64 linux-arm64 windows-x64 windows-arm64; do
             tar -xJf ares-deps-${package}/ares-deps.tar.xz
             rm -rf ares-deps-${package}
             mv ares-deps ares-deps-${package}
@@ -175,5 +177,6 @@ jobs:
             ${{ github.workspace }}/ares-deps-windows-x64*.*
             ${{ github.workspace }}/ares-deps-windows-arm64*.*
             ${{ github.workspace }}/ares-deps-macos-universal*.*
-            ${{ github.workspace }}/ares-deps-linux-universal*.*
+            ${{ github.workspace }}/ares-deps-linux-x64*.*
+            ${{ github.workspace }}/ares-deps-linux-arm64*.*
        
