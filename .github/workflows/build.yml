@@ -165,19 +165,37 @@ jobs:
         run: |
           : Generate deps.json
           SDL_VERSION=$(grep "^sdl_version=" deps.linux/sdl | cut -d"'" -f2)
+          SDL_URL=$(grep "^sdl_url=" deps.linux/sdl | cut -d"'" -f2 | sed 's/\.git$//')
           LIBRASHADER_VERSION=$(grep "^librashader_version=" deps.linux/librashader | cut -d"'" -f2)
+          LIBRASHADER_URL=$(grep "^librashader_url=" deps.linux/librashader | cut -d"'" -f2 | sed 's/\.git$//')
+          SLANG_SHADERS_VERSION=$(grep "^slang_shaders_version=" deps.linux/slang_shaders | cut -d"'" -f2)
+          SLANG_SHADERS_HASH=$(grep "^slang_shaders_hash=" deps.linux/slang_shaders | cut -d"'" -f2)
+          SLANG_SHADERS_URL=$(grep "^slang_shaders_url=" deps.linux/slang_shaders | cut -d"'" -f2 | sed 's/\.git$//')
+          MOLTENVK_VERSION=$(grep "^moltenvk_version=" deps.macos/moltenvk | cut -d"'" -f2)
+          MOLTENVK_URL=$(grep "^moltenvk_url=" deps.macos/moltenvk | cut -d"'" -f2 | sed 's/\.git$//')
+
           HASH_LINUX_X64=$(sha256sum ${{ github.workspace }}/ares-deps-linux-x64.tar.xz | cut -d" " -f1)
           HASH_LINUX_ARM64=$(sha256sum ${{ github.workspace }}/ares-deps-linux-arm64.tar.xz | cut -d" " -f1)
+          HASH_MACOS=$(sha256sum ${{ github.workspace }}/ares-deps-macos-universal.tar.xz | cut -d" " -f1)
+          HASH_WINDOWS_X64=$(sha256sum ${{ github.workspace }}/ares-deps-windows-x64.tar.xz | cut -d" " -f1)
+          HASH_WINDOWS_ARM64=$(sha256sum ${{ github.workspace }}/ares-deps-windows-arm64.tar.xz | cut -d" " -f1)
 
           cat > ${{ github.workspace }}/deps.json <<EOF
           {
             "version": "${{ steps.metadata.outputs.version }}",
             "baseUrl": "https://github.com/${{ github.repository }}/releases/download",
-            "sdlVersion": "${SDL_VERSION}",
-            "librashaderVersion": "${LIBRASHADER_VERSION}",
+            "dependencies": {
+              "sdl": { "version": "${SDL_VERSION}", "tag": "release-${SDL_VERSION}", "url": "${SDL_URL}" },
+              "librashader": { "version": "${LIBRASHADER_VERSION}", "tag": "librashader-v${LIBRASHADER_VERSION}", "url": "${LIBRASHADER_URL}" },
+              "slang-shaders": { "version": "${SLANG_SHADERS_VERSION}", "commit": "${SLANG_SHADERS_HASH}", "url": "${SLANG_SHADERS_URL}" },
+              "moltenvk": { "version": "${MOLTENVK_VERSION}", "tag": "v${MOLTENVK_VERSION}", "url": "${MOLTENVK_URL}" }
+            },
             "hashes": {
               "linux-x64": "${HASH_LINUX_X64}",
-              "linux-arm64": "${HASH_LINUX_ARM64}"
+              "linux-arm64": "${HASH_LINUX_ARM64}",
+              "macos-universal": "${HASH_MACOS}",
+              "windows-x64": "${HASH_WINDOWS_X64}",
+              "windows-arm64": "${HASH_WINDOWS_ARM64}"
             }
           }
           EOF

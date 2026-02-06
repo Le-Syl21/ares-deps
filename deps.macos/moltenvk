@@ -1,9 +1,10 @@
 moltenvk_name='MoltenVK'
 moltenvk_version='1.4.1'
+moltenvk_url='https://github.com/KhronosGroup/MoltenVK.git'
 
 moltenvk_setup() {
   echo "[MoltenVK] downloading pre-built package"
-  curl -sL -o MoltenVK-macos.tar "https://github.com/KhronosGroup/MoltenVK/releases/download/v${moltenvk_version}/MoltenVK-macos.tar"
+  curl -sL -o MoltenVK-macos.tar "${moltenvk_url%.git}/releases/download/v${moltenvk_version}/MoltenVK-macos.tar"
   tar xf MoltenVK-macos.tar
   rm MoltenVK-macos.tar
   echo "[MoltenVK] downloading -- success"
