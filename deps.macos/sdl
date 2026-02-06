@@ -4,11 +4,15 @@ sdl_version='3.4.0'
 sdl_setup() {
   echo "[SDL3] downloading pre-built package"
   curl -sL -o SDL3.dmg "https://github.com/libsdl-org/SDL/releases/download/release-${sdl_version}/SDL3-${sdl_version}.dmg"
-  hdiutil attach SDL3.dmg -mountpoint /tmp/SDL3_mount -quiet
+  hdiutil attach SDL3.dmg -noverify -nobrowse
+  # Find the mount point (volume name may vary)
+  local mount_point=$(hdiutil info | grep -A1 "SDL3" | grep "/Volumes/" | awk '{print $1}')
+  echo "SDL3 DMG mounted at: ${mount_point}"
+  ls "${mount_point}/"
   mkdir -p SDL
-  ditto /tmp/SDL3_mount/SDL3/SDL3.xcframework/macos-arm64_x86_64/SDL3.framework SDL/SDL3.framework
-  ditto /tmp/SDL3_mount/SDL3/LICENSE.txt SDL/LICENSE.txt
-  hdiutil detach /tmp/SDL3_mount -quiet
+  ditto "${mount_point}/SDL3.xcframework/macos-arm64_x86_64/SDL3.framework" SDL/SDL3.framework
+  ditto "${mount_point}/LICENSE.txt" SDL/LICENSE.txt
+  hdiutil detach "${mount_point}"
   rm SDL3.dmg
   echo "[SDL3] downloading -- success"
 }
