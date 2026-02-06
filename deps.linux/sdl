@@ -1,17 +1,10 @@
 sdl_name='SDL3'
 sdl_version='3.4.0'
 sdl_url='https://github.com/libsdl-org/SDL.git'
-sdl_hash='a962f40bbba175e9716557a25d5d7965f134a3d3'
 
-## Build Steps
 sdl_setup() {
   echo "[SDL3] cloning"
-  if [ ! -d "SDL" ]; then
-    git clone ${sdl_url}
-  else
-    git -C SDL fetch
-  fi
-  git -C SDL reset --hard "$sdl_hash"
+  git clone --branch release-${sdl_version} --depth 1 ${sdl_url} SDL
   echo "[SDL3] cloning -- success"
 }
 
@@ -29,40 +22,24 @@ sdl_patch() {
 sdl_build() {
   echo "[SDL3] building"
   cd SDL
-  mkdir -p build
-  pushd build
-
-  cmake .. \
-    -DCMAKE_BUILD_TYPE=${config} \
+  cmake -B build \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX="$SCRIPT_DIR/ares-deps" \
     -DSDL_SHARED=ON \
     -DSDL_STATIC=OFF \
+    -DSDL_TEST=OFF \
     -DSDL_X11_XTEST=OFF
-
-  cmake --build . --config ${config} --parallel
-
-  popd
+  cmake --build build --parallel
   cd ..
   echo "[SDL3] building -- success"
 }
 
 sdl_install() {
   echo "[SDL3] installing"
-  mkdir -p ares-deps/lib
-  mkdir -p ares-deps/include/SDL3
   mkdir -p ares-deps/licenses/SDL3
 
-  # Install shared library and symlinks
-  cp -P build_temp/SDL/build/libSDL3.so* ares-deps/lib/
+  cmake --install build_temp/SDL/build
 
-  # Install headers
-  cp -R build_temp/SDL/include/SDL3/. ares-deps/include/SDL3/
-
-  # Install generated build config header
-  # SDL3 CMake uses $<LOWER_CASE:$<CONFIG>> so the directory name is always lowercase
-  local config_lower=$(echo "${config}" | tr '[:upper:]' '[:lower:]')
-  cp -R build_temp/SDL/build/include-config-${config_lower}/build_config/. ares-deps/include/SDL3/
-
-  # Install license
   cp build_temp/SDL/LICENSE.txt ares-deps/licenses/SDL3/LICENSE.txt
 
   echo "[SDL3] installing -- success"
