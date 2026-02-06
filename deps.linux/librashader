@@ -42,7 +42,7 @@ librashader_build() {
   echo "[librashader] building"
   cd librashader
   export RUSTFLAGS=-g
-  cargo run -p librashader-build-script -- --profile ${librashader_profile}
+  cargo run -p librashader-build-script -- --profile ${librashader_profile} -- --features=stable
   cd ..
   echo "[librashader] building -- success"
 }
