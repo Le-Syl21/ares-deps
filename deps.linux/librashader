@@ -31,9 +31,9 @@ librashader_package_source() {
 librashader_patch() {
   echo "[librashader] patching source"
   cd librashader
-  echo "Pinning Rust to stable 1.93.0"
+  echo "Pinning nightly Rust version to 2025-03-21"
   echo '[toolchain]' > rust-toolchain.toml
-  echo 'channel = "1.93.0"' >> rust-toolchain.toml
+  echo 'channel = "nightly-2025-03-21"' >> rust-toolchain.toml
   cd ..
   echo "[librashader] patching source -- success"
 }
@@ -42,7 +42,7 @@ librashader_build() {
   echo "[librashader] building"
   cd librashader
   export RUSTFLAGS=-g
-  cargo run -p librashader-build-script -- --profile ${librashader_profile} -- --features=stable
+  cargo run -p librashader-build-script -- --profile ${librashader_profile}
   cd ..
   echo "[librashader] building -- success"
 }

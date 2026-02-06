@@ -55,19 +55,19 @@ jobs:
       run: |
         export PATH="/c/Users/runneradmin/.cargo/bin:$PATH" # correct on windows-latest as of 2024-02-19
         if [[ ${{ matrix.platform.name }} == *-arm64 ]]; then
-          rustup toolchain install stable
-          rustup default stable
+          rustup toolchain install nightly
+          rustup default nightly
           rustup target add aarch64-pc-windows-msvc
         else
-          rustup toolchain install stable
-          rustup default stable
+          rustup toolchain install nightly
+          rustup default nightly
         fi
     - name: Install macOS Dependencies
       if: runner.os == 'macOS'
       run: |
         brew install ninja cmake xcbeautify
-        rustup toolchain install stable
-        rustup default stable
+        rustup toolchain install nightly
+        rustup default nightly
         rustup target add x86_64-apple-darwin
         rustup target add aarch64-apple-darwin
     - name: Install Linux Dependencies
@@ -79,8 +79,8 @@ jobs:
           libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev libxss-dev \
           libwayland-dev libxkbcommon-dev libegl-dev libdrm-dev libgbm-dev \
           libvulkan-dev
-        rustup toolchain install stable
-        rustup default stable
+        rustup toolchain install nightly
+        rustup default nightly
     - name: Set up MSVC environment
       if: matrix.platform.msvc-arch != ''
       uses: ilammy/msvc-dev-cmd@v1
