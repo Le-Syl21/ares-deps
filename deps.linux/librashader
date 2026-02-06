@@ -1,23 +1,10 @@
 librashader_name='librashader'
 librashader_version='0.9.1'
 librashader_url='https://github.com/SnowflakePowered/librashader.git'
-librashader_hash='ad661b661c3d10cb4a2573a78a41857330d499ca'
-librashader_profile='release'
 
 librashader_setup() {
   echo "[librashader] cloning"
-  if [ ! -d "librashader" ]; then
-    git clone https://github.com/SnowflakePowered/librashader.git
-  else
-    git -C librashader fetch
-  fi
-  git -C librashader reset --hard "$librashader_hash"
-
-  if [[ $config == "Debug" ]]; then
-    librashader_profile='debug'
-  elif [[ $config == "Release" ]]; then
-    librashader_profile='optimized'
-  fi
+  git clone --branch librashader-v${librashader_version} --depth 1 ${librashader_url}
   echo "[librashader] cloning -- success"
 }
 
@@ -28,25 +15,14 @@ librashader_package_source() {
   echo "[librashader] packaging source -- success"
 }
 
-librashader_clean() {
-  echo "[librashader] cleaning up -- skipped"
-}
-
 librashader_patch() {
-  echo "[librashader] patching source"
-  cd librashader
-  echo "Pinning nightly Rust version to 2025-03-21"
-  echo '[toolchain]' > rust-toolchain.toml
-  echo 'channel = "nightly-2025-03-21"' >> rust-toolchain.toml
-  cd ..
-  echo "[librashader] patching source -- success"
+  echo "[librashader] patching -- skipped"
 }
 
 librashader_build() {
   echo "[librashader] building"
   cd librashader
-  export RUSTFLAGS=-g
-  cargo run -p librashader-build-script -- --profile ${librashader_profile}
+  cargo build --release -p librashader-capi --features=stable
   cd ..
   echo "[librashader] building -- success"
 }
@@ -57,13 +33,8 @@ librashader_install() {
   mkdir -p ares-deps/lib/
   mkdir -p ares-deps/licenses/librashader/
 
-  # Install headers
   cp -R build_temp/librashader/include/. ares-deps/include/librashader/
-
-  # Install shared library
-  cp build_temp/librashader/target/${librashader_profile}/librashader.so ares-deps/lib/librashader.so
-
-  # Install licenses
+  cp build_temp/librashader/target/release/liblibrashader_capi.so ares-deps/lib/librashader.so
   cp build_temp/librashader/LICENSE.md ares-deps/licenses/librashader/LICENSE.md
   cp build_temp/librashader/LICENSE-GPL.md ares-deps/licenses/librashader/LICENSE-GPL.md
 
