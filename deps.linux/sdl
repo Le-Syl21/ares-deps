@@ -57,15 +57,10 @@ sdl_install() {
   # Install headers
   cp -R build_temp/SDL/include/SDL3/. ares-deps/include/SDL3/
 
-  # Install generated build config header (path varies by SDL version)
-  if [ -d "build_temp/SDL/build/include-config-${config}/build_config" ]; then
-    cp -R build_temp/SDL/build/include-config-${config}/build_config/. ares-deps/include/SDL3/
-  elif [ -d "build_temp/SDL/build/include/SDL3" ]; then
-    cp -R build_temp/SDL/build/include/SDL3/. ares-deps/include/SDL3/
-  else
-    echo "ERROR: SDL build config headers not found" >&2
-    exit 1
-  fi
+  # Install generated build config header
+  # SDL3 CMake uses $<LOWER_CASE:$<CONFIG>> so the directory name is always lowercase
+  local config_lower=$(echo "${config}" | tr '[:upper:]' '[:lower:]')
+  cp -R build_temp/SDL/build/include-config-${config_lower}/build_config/. ares-deps/include/SDL3/
 
   # Install license
   cp build_temp/SDL/LICENSE.txt ares-deps/licenses/SDL3/LICENSE.txt
