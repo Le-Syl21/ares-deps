@@ -28,16 +28,12 @@ librashader_package_source() {
   echo "[librashader] packaging source -- success"
 }
 
-librashader_clean() {
-  echo "[librashader] cleaning up -- skipped"
-}
-
 librashader_patch() {
   echo "[librashader] patching source"
   cd librashader
-  echo "Pinning nightly Rust version to 2025-03-21"
+  echo "Pinning Rust to stable 1.93.0"
   echo '[toolchain]' > rust-toolchain.toml
-  echo 'channel = "nightly-2025-03-21"' >> rust-toolchain.toml
+  echo 'channel = "1.93.0"' >> rust-toolchain.toml
   cd ..
   echo "[librashader] patching source -- success"
 }

@@ -17,10 +17,6 @@ slang_shaders_package_source() {
   echo "[slang_shaders] packaging source -- skipped"
 }
 
-slang_shaders_clean() {
-  echo "[slang_shaders] cleaning up -- skipped"
-}
-
 slang_shaders_patch() {
   echo "[slang_shaders] patching -- skipped"
 }

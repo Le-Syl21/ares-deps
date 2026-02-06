@@ -22,10 +22,6 @@ sdl_package_source() {
   echo "[SDL3] packaging source -- success"
 }
 
-sdl_clean() {
-  echo "[SDL3] cleaning up -- skipped"
-}
-
 sdl_patch() {
   echo "[SDL3] patching -- skipped"
 }
@@ -38,7 +34,6 @@ sdl_build() {
 
   cmake .. \
     -DCMAKE_BUILD_TYPE=${config} \
-    -DCMAKE_INSTALL_PREFIX=/usr \
     -DSDL_SHARED=ON \
     -DSDL_STATIC=OFF \
     -DSDL_X11_XTEST=OFF
@@ -61,8 +56,16 @@ sdl_install() {
 
   # Install headers
   cp -R build_temp/SDL/include/SDL3/. ares-deps/include/SDL3/
-  cp -R build_temp/SDL/build/include-config-${config}/build_config/. ares-deps/include/SDL3/ 2>/dev/null || \
-  cp -R build_temp/SDL/build/include/SDL3/. ares-deps/include/SDL3/ 2>/dev/null || true
+
+  # Install generated build config header (path varies by SDL version)
+  if [ -d "build_temp/SDL/build/include-config-${config}/build_config" ]; then
+    cp -R build_temp/SDL/build/include-config-${config}/build_config/. ares-deps/include/SDL3/
+  elif [ -d "build_temp/SDL/build/include/SDL3" ]; then
+    cp -R build_temp/SDL/build/include/SDL3/. ares-deps/include/SDL3/
+  else
+    echo "ERROR: SDL build config headers not found" >&2
+    exit 1
+  fi
 
   # Install license
   cp build_temp/SDL/LICENSE.txt ares-deps/licenses/SDL3/LICENSE.txt

@@ -23,10 +23,6 @@ sdl_package_source() {
   echo "[SDL3] packaging source -- success"
 }
 
-sdl_clean() {
-  echo "[SDL3] cleaning up -- skipped"
-}
-
 sdl_patch() {
   echo "[SDL3] patching -- skipped"
 }

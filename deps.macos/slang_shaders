@@ -19,29 +19,25 @@ slang_shaders_package_source() {
   echo "[slang_shaders] packaging source -- skipped"
 }
 
-slang_shaders_clean() {
-  echo "[slang_shaders] cleaning up -- skipped"
-}
-
 slang_shaders_patch() {
   echo "[slang_shaders] patching -- skipped"
 }
 
 slang_shaders_build() {
-  echo "[slang_shaders] building"
+  echo "[slang_shaders] cleaning source tree"
   cd slang-shaders
   rm -rf .git
   rm -f .gitlab-ci.yml
   rm -f configure
   rm -f Makefile
   cd ..
-  echo "[slang_shaders] building -- skipped"
+  echo "[slang_shaders] cleaning source tree -- success"
 }
 
 slang_shaders_install() {
   echo "[slang_shaders] installing"
   ditto "build_temp"/slang-shaders ares-deps/share/libretro/shaders/shaders_slang
-  echo "[slang_shaders] installing -- skipped"
+  echo "[slang_shaders] installing -- success"
 }
 
 
