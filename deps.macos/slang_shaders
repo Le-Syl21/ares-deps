@@ -30,6 +30,6 @@ slang_shaders_build() {
 
 slang_shaders_install() {
   echo "[slang_shaders] installing"
-  ditto build_temp/slang-shaders ares-deps/share/libretro/shaders
+  ditto build_temp/slang-shaders ares-deps/share/libretro/shaders/shaders_slang
   echo "[slang_shaders] installing -- success"
 }

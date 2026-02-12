@@ -30,7 +30,7 @@ slang_shaders_build() {
 
 slang_shaders_install() {
   echo "[slang_shaders] installing"
-  mkdir -p ares-deps/share/libretro/shaders
-  cp -R build_temp/slang-shaders/. ares-deps/share/libretro/shaders/
+  mkdir -p ares-deps/share/libretro/shaders/shaders_slang
+  cp -R build_temp/slang-shaders/. ares-deps/share/libretro/shaders/shaders_slang/
   echo "[slang_shaders] installing -- success"
 }
